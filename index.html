@@ -263,9 +263,9 @@ async function joinChannel() {
   const code = getCode(), name = document.getElementById('join-name').value.trim();
   if (code.length < 6) return toast('채널 코드 6자리를 입력해주세요');
   if (!name) return toast('이름을 입력해주세요');
-  const { data, error } = await sb.from('channels').select('*').eq('id', code).single();
-  if (error || !data) return toast('채널을 찾을 수 없어요');
-  state.channelId = code; state.channelName = data.name; state.userName = name;
+ const { data, error } = await sb.from('channels').select('*').eq('id', code);
+if (error || !data || data.length === 0) return toast('채널을 찾을 수 없어요');
+state.channelId = code; state.channelName = data[0].name;
   loadChannel();
 }
 
