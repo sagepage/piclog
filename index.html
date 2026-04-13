@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>piclog.</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
 
@@ -633,6 +633,7 @@
 <!-- 토스트 -->
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ── 설정 ──────────────────────────────────────────────
 const SUPABASE_URL = 'https://qbovapyfrjttlfnrqkln.supabase.co';
@@ -1034,6 +1035,23 @@ function formatTime(iso) {
   if (diff < 86400) return `${Math.floor(diff/3600)}시간 전`;
   return `${d.getMonth()+1}/${d.getDate()}`;
 }
+
+// ── window에 함수 노출 (onclick 동작을 위해) ────────────────
+window.joinChannel = joinChannel;
+window.openCreateModal = openCreateModal;
+window.createChannel = createChannel;
+window.goHome = goHome;
+window.copyCode = copyCode;
+window.openUploadModal = openUploadModal;
+window.openAlbumModal = openAlbumModal;
+window.addAlbum = addAlbum;
+window.uploadPhoto = uploadPhoto;
+window.previewFile = previewFile;
+window.closeModal = closeModal;
+window.toggleLike = toggleLike;
+window.toggleComments = toggleComments;
+window.addComment = addComment;
+window.deleteAlbum = deleteAlbum;
 </script>
 </body>
 </html>
