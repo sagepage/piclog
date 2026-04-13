@@ -528,13 +528,13 @@
     <div class="section-label">채널 코드 입력</div>
     <div class="code-input-row" id="code-inputs"></div>
     <input type="text" id="join-name" placeholder="내 이름 (예: 민준)" style="margin-bottom:10px">
-    <button class="btn-black" onclick="joinChannel()">입장하기</button>
+    <button class="btn-black" data-action="joinChannel">입장하기</button>
   </div>
 
   <div class="divider">또는</div>
 
   <div class="home-section">
-    <button class="btn-outline" onclick="openCreateModal()">+ 새 채널 만들기</button>
+    <button class="btn-outline" data-action="openCreateModal">+ 새 채널 만들기</button>
   </div>
 </div>
 
@@ -542,7 +542,7 @@
 <div id="page-channel" class="page">
   <div class="channel-header">
     <div style="display:flex;align-items:center;gap:10px">
-      <button class="back-btn" onclick="goHome()">
+      <button class="back-btn" data-action="goHome">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
           <path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -552,7 +552,7 @@
         <div class="channel-meta" id="ch-meta"></div>
       </div>
     </div>
-    <button class="code-badge" id="code-copy-btn" onclick="copyCode()">
+    <button class="code-badge" id="code-copy-btn" data-action="copyCode">
       <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
         <rect x="1" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1"/>
         <path d="M3 3V2a1 1 0 011-1h5a1 1 0 011 1v6a1 1 0 01-1 1H8" stroke="currentColor" stroke-width="1"/>
@@ -565,7 +565,7 @@
   <div class="feed" id="feed"></div>
 
   <div class="bottom-bar">
-    <button class="upload-btn" onclick="openUploadModal()">
+    <button class="upload-btn" data-action="openUploadModal">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
         <rect x="1" y="4" width="12" height="9" rx="1.5" stroke="white" stroke-width="1.2"/>
         <path d="M5 4V3a2 2 0 014 0v1" stroke="white" stroke-width="1.2"/>
@@ -574,29 +574,29 @@
       </svg>
       사진 올리기
     </button>
-    <button class="btn-outline" style="flex:1" onclick="openAlbumModal()">앨범 관리</button>
+    <button class="btn-outline" style="flex:1" data-action="openAlbumModal">앨범 관리</button>
   </div>
 </div>
 
 <!-- 채널 생성 모달 -->
-<div class="modal-backdrop" id="modal-create" onclick="closeModal('modal-create')">
-  <div class="modal" onclick="event.stopPropagation()">
+<div class="modal-backdrop" id="modal-create" data-action="closeModal" data-target="modal-create">
+  <div class="modal" data-stop="true">
     <div class="modal-handle"></div>
     <div class="modal-title">새 채널 만들기</div>
     <div class="form-gap">
       <input type="text" id="create-channel-name" placeholder="채널 이름 (예: 제주 여행)">
       <input type="text" id="create-user-name" placeholder="내 이름">
-      <button class="btn-black" onclick="createChannel()" id="create-btn">만들기</button>
+      <button class="btn-black" data-action="createChannel" id="create-btn">만들기</button>
     </div>
   </div>
 </div>
 
 <!-- 업로드 모달 -->
-<div class="modal-backdrop" id="modal-upload" onclick="closeModal('modal-upload')">
-  <div class="modal" onclick="event.stopPropagation()">
+<div class="modal-backdrop" id="modal-upload" data-action="closeModal" data-target="modal-upload">
+  <div class="modal" data-stop="true">
     <div class="modal-handle"></div>
     <div class="modal-title">사진 올리기</div>
-    <div class="upload-preview" id="upload-preview" onclick="document.getElementById('file-input').click()">
+    <div class="upload-preview" id="upload-preview" data-action="triggerFileInput">
       <div class="upload-placeholder">
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
           <rect x="2" y="7" width="24" height="18" rx="3" stroke="#aaa" stroke-width="1.5"/>
@@ -607,25 +607,25 @@
         <span>클릭해서 사진 선택</span>
       </div>
     </div>
-    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="previewFile(event)">
+    <input type="file" id="file-input" accept="image/*" style="display:none" id="file-input-listener">
     <div class="form-gap">
       <input type="text" id="upload-caption" placeholder="한마디 남기기 (선택)">
       <select id="upload-album"><option value="">앨범 선택 (선택사항)</option></select>
-      <button class="btn-black" onclick="uploadPhoto()" id="upload-btn">올리기</button>
+      <button class="btn-black" data-action="uploadPhoto" id="upload-btn">올리기</button>
     </div>
   </div>
 </div>
 
 <!-- 앨범 모달 -->
-<div class="modal-backdrop" id="modal-album" onclick="closeModal('modal-album')">
-  <div class="modal" onclick="event.stopPropagation()">
+<div class="modal-backdrop" id="modal-album" data-action="closeModal" data-target="modal-album">
+  <div class="modal" data-stop="true">
     <div class="modal-handle"></div>
     <div class="modal-title">앨범 관리</div>
     <div id="album-list" style="margin-bottom:12px;display:flex;flex-direction:column;gap:6px"></div>
     <div class="section-label" style="margin-top:8px">새 앨범 추가</div>
     <div class="album-form">
       <input type="text" id="new-album-name" placeholder="앨범 이름">
-      <button onclick="addAlbum()">추가</button>
+      <button data-action="addAlbum">추가</button>
     </div>
   </div>
 </div>
@@ -637,9 +637,9 @@
 <script>
 // ── 설정 ──────────────────────────────────────────────
 const SUPABASE_URL = 'https://qbovapyfrjttlfnrqkln.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFib3ZhcHlmcmp0dGxmbnJxa2xuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMTUxNTEsImV4cCI6MjA5MTU5MTE1MX0.-obqUTXA7RkXKo43QnCnxMz9gltfanrJT6AdAYT6UTI'; // ← anon key 여기에 붙여넣기
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFib3ZhcHlmcmp0dGxmbnJxa2xuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMTUxNTEsImV4cCI6MjA5MTU5MTE1MX0.-obqUTXA7RkXKo43QnCnxMz9gltfanrJT6AdAYT6UTI'; 
 const CLOUDINARY_CLOUD = 'dorsu1emn';
-const CLOUDINARY_PRESET = 'sagepage's Project'; // ← Cloudinary 프리셋 이름
+const CLOUDINARY_PRESET = 'sagepage's Project'; 
 
 // ── 초기화 ────────────────────────────────────────────
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -674,7 +674,6 @@ function buildCodeInputs() {
     row.appendChild(inp);
   }
 }
-buildCodeInputs();
 
 function getCode() {
   return Array.from(document.querySelectorAll('.code-digit')).map(i => i.value).join('');
@@ -1036,22 +1035,40 @@ function formatTime(iso) {
   return `${d.getMonth()+1}/${d.getDate()}`;
 }
 
-// ── window에 함수 노출 (onclick 동작을 위해) ────────────────
-window.joinChannel = joinChannel;
-window.openCreateModal = openCreateModal;
-window.createChannel = createChannel;
-window.goHome = goHome;
-window.copyCode = copyCode;
-window.openUploadModal = openUploadModal;
-window.openAlbumModal = openAlbumModal;
-window.addAlbum = addAlbum;
-window.uploadPhoto = uploadPhoto;
-window.previewFile = previewFile;
-window.closeModal = closeModal;
-window.toggleLike = toggleLike;
-window.toggleComments = toggleComments;
-window.addComment = addComment;
-window.deleteAlbum = deleteAlbum;
+
+// ── 이벤트 위임 (onclick 대체) ────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  buildCodeInputs();
+
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('[data-stop]')) { e.stopPropagation(); return; }
+    const el = e.target.closest('[data-action]');
+    if (!el) return;
+    const action = el.dataset.action;
+    const target = el.dataset.target;
+    if (action === 'joinChannel') joinChannel();
+    else if (action === 'openCreateModal') openCreateModal();
+    else if (action === 'createChannel') createChannel();
+    else if (action === 'closeModal') closeModal(target);
+    else if (action === 'goHome') goHome();
+    else if (action === 'copyCode') copyCode();
+    else if (action === 'openUploadModal') openUploadModal();
+    else if (action === 'openAlbumModal') openAlbumModal();
+    else if (action === 'addAlbum') addAlbum();
+    else if (action === 'uploadPhoto') uploadPhoto();
+    else if (action === 'triggerFileInput') document.getElementById('file-input').click();
+  });
+
+
+  // dynamic onclick 함수들을 window에 노출
+  window.deleteAlbum = deleteAlbum;
+  window.toggleComments = toggleComments;
+  window.toggleLike = toggleLike;
+  window.addComment = addComment;
+
+  document.getElementById('file-input').addEventListener('change', function(e) {
+    previewFile(e);
+  });
+});
 </script>
 </body>
-</html>
