@@ -2,32 +2,33 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>piclog.</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
-:root{--bg:#fff;--bg2:#f7f7f5;--bg3:#f0f0ee;--border:#e8e8e6;--border2:#d0d0ce;--text:#0a0a0a;--text2:#666;--text3:#aaa;--accent:#0a0a0a;--red:#ff4060;--rs:9px}
+:root{--bg:#fff;--bg2:#f7f7f5;--bg3:#f0f0ee;--border:#e8e8e6;--border2:#d0d0ce;--text:#0a0a0a;--text2:#666;--text3:#aaa;--accent:#0a0a0a;--red:#ff4060;--rs:10px}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
-html,body{height:100%}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overscroll-behavior:none}
 input,textarea,button,select{font-family:inherit}
 button{cursor:pointer;border:none;background:none;transition:opacity .15s,transform .1s}
 button:active{transform:scale(0.97)}
-.btn-black{background:var(--accent);color:#fff;border-radius:var(--rs);padding:12px 20px;font-size:14px;font-weight:500;width:100%;display:block;text-align:center}
+.btn-black{background:var(--accent);color:#fff;border-radius:var(--rs);padding:13px 20px;font-size:14px;font-weight:500;width:100%;display:block;text-align:center;border:none}
 .btn-black:hover{opacity:.85}
-.btn-outline{background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--rs);padding:11px 20px;font-size:14px;width:100%;display:block;text-align:center}
+.btn-outline{background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--rs);padding:12px 20px;font-size:14px;width:100%;display:block;text-align:center}
 .btn-outline:hover{background:var(--bg2)}
 input[type=text],textarea,select{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:11px 14px;font-size:14px;color:var(--text);outline:none;transition:border-color .15s}
 input[type=text]:focus,textarea:focus{border-color:var(--border2)}
 input::placeholder{color:var(--text3)}
+.form-gap{display:flex;flex-direction:column;gap:10px}
 .hidden{display:none!important}
 
-/* ── 페이지 ── */
-.page{display:none;max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:90px}
+/* ── 페이지 구조: 전체 height 제어 ── */
+html,body{height:100%;overflow:hidden}
+.page{display:none;position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--bg)}
 .page.active{display:block}
 
 /* ── 홈 ── */
-#page-home{padding:60px 28px 40px;display:flex;flex-direction:column;justify-content:center;min-height:100vh}
+#page-home{padding:60px 28px 40px;display:flex;flex-direction:column;justify-content:center}
 .logo{font-size:36px;font-weight:600;letter-spacing:-.03em;margin-bottom:8px}
 .logo-sub{font-size:14px;color:var(--text3);margin-bottom:48px;line-height:1.6}
 .sec-label{font-size:10px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;font-family:'DM Mono',monospace}
@@ -36,121 +37,134 @@ input::placeholder{color:var(--text3)}
 .code-digit:focus{border-color:var(--text)}
 .divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--text3);font-size:12px}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
-.form-gap{display:flex;flex-direction:column;gap:10px}
 
-/* ── 모달 ── */
-.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:flex-end;justify-content:center}
-.modal-backdrop.open{display:flex}
-.modal{background:var(--bg);border-radius:24px 24px 0 0;padding:28px 24px 44px;width:100%;max-width:480px;animation:slideUp .22s ease;max-height:90vh;overflow-y:auto}
-@keyframes slideUp{from{transform:translateY(60px);opacity:0}}
-.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 24px}
-.modal-title{font-size:18px;font-weight:600;margin-bottom:20px;letter-spacing:-.02em}
-
-/* ── 채널 헤더 ── */
-.ch-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:1px solid var(--border)}
-.ch-title{font-size:17px;font-weight:600;letter-spacing:-.02em}
+/* ── 채널 ── */
+#page-channel{padding-bottom:90px}
+.ch-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:20}
+.ch-title{font-size:16px;font-weight:600;letter-spacing:-.02em}
 .ch-meta{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
 .code-badge{display:flex;align-items:center;gap:5px;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:11px;font-family:'DM Mono',monospace;color:var(--text2);cursor:pointer}
-.code-badge:hover{background:var(--bg3)}
 .back-btn{padding:4px 8px 4px 0;color:var(--text2);display:flex;align-items:center}
 
-/* ── 뷰 전환 탭 ── */
-.view-tabs{display:flex;gap:0;padding:10px 20px 0;border-bottom:1px solid var(--border)}
-.view-tab{flex:1;padding:8px;font-size:13px;font-weight:500;color:var(--text3);text-align:center;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s}
-.view-tab.on{color:var(--text);border-bottom-color:var(--text)}
-
-/* ── 앨범 칩 ── */
-.album-scroll{display:flex;gap:6px;padding:12px 20px;overflow-x:auto}
+/* ── 툴바 (뷰 전환 + 앨범) ── */
+.toolbar{display:flex;align-items:center;gap:8px;padding:10px 18px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:57px;z-index:19}
+.album-scroll{display:flex;gap:6px;overflow-x:auto;flex:1}
 .album-scroll::-webkit-scrollbar{display:none}
-.a-chip{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border);color:var(--text2);background:transparent;cursor:pointer;transition:all .15s}
+.a-chip{flex-shrink:0;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border);color:var(--text2);background:transparent;cursor:pointer;transition:all .15s;white-space:nowrap}
 .a-chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.view-toggle{display:flex;gap:2px;flex-shrink:0;background:var(--bg2);border-radius:8px;padding:3px}
+.vt-btn{width:30px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--text3);transition:all .15s}
+.vt-btn.on{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
 
-/* ── 리스트 뷰 ── */
-.feed{padding:0 20px}
-.feed-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);position:relative}
-.feed-thumb{width:80px;height:80px;border-radius:12px;flex-shrink:0;overflow:hidden;background:var(--bg2);cursor:pointer}
-.feed-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.feed-info{flex:1;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
-.feed-top{display:flex;justify-content:space-between;align-items:flex-start}
-.feed-name{font-size:13px;font-weight:600}
-.feed-time{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;flex-shrink:0}
-.feed-caption{font-size:13px;color:var(--text2);margin-top:4px;line-height:1.45}
-.feed-actions{display:flex;gap:14px;align-items:center;margin-top:8px}
-.like-btn{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text3);padding:0;transition:color .15s}
-.like-btn.liked{color:var(--red)}
-.cmt-toggle{font-size:12px;color:var(--text3);padding:0}
-.del-btn{position:absolute;top:14px;right:0;width:28px;height:28px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
-.feed-item:hover .del-btn{opacity:1}
-
-/* ── 그리드 뷰 ── */
+/* ── 그리드 뷰 (기본) ── */
 .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:2px}
-.grid-cell{aspect-ratio:1;position:relative;cursor:pointer;overflow:hidden;background:var(--bg2)}
+.grid-cell{aspect-ratio:1;position:relative;overflow:hidden;background:var(--bg2);cursor:pointer}
 .grid-cell img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s}
 .grid-cell:hover img{transform:scale(1.04)}
-.grid-cell .grid-like{position:absolute;bottom:6px;left:6px;display:flex;align-items:center;gap:3px;background:rgba(0,0,0,.45);border-radius:20px;padding:2px 7px;font-size:10px;color:#fff}
-.grid-cell .grid-like.liked-g{color:#ff8099}
-.grid-cell .grid-del{position:absolute;top:5px;right:5px;width:22px;height:22px;background:rgba(0,0,0,.5);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
-.grid-cell:hover .grid-del{opacity:1}
-.grid-select-overlay{position:absolute;inset:0;background:rgba(10,10,10,.45);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
-.grid-cell.selected .grid-select-overlay{opacity:1}
-.grid-check{width:22px;height:22px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
+.g-like{position:absolute;bottom:5px;left:5px;display:flex;align-items:center;gap:3px;background:rgba(0,0,0,.4);border-radius:20px;padding:2px 6px;font-size:10px;color:#fff;cursor:pointer;transition:background .15s;border:none;z-index:2}
+.g-like:hover{background:rgba(0,0,0,.6)}
+.g-like.liked{color:#ffb3c0}
+.g-del{position:absolute;top:5px;right:5px;width:22px;height:22px;background:rgba(0,0,0,.45);border-radius:50%;display:none;align-items:center;justify-content:center;cursor:pointer;border:none;z-index:2}
+.grid-cell:hover .g-del{display:flex}
+.g-sel-overlay{position:absolute;inset:0;background:rgba(10,10,10,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;pointer-events:none}
+.grid-cell.selected .g-sel-overlay{opacity:1}
+.g-check{width:24px;height:24px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
+.g-cmt-btn{position:absolute;bottom:5px;right:5px;display:flex;align-items:center;gap:3px;background:rgba(0,0,0,.4);border-radius:20px;padding:2px 6px;font-size:10px;color:#fff;cursor:pointer;border:none;z-index:2}
+.g-cmt-btn:hover{background:rgba(0,0,0,.6)}
 
-/* ── 댓글 ── */
-.comments-box{background:var(--bg2);border-radius:12px;padding:12px 14px;margin:0 20px 4px}
-.cmt-item{font-size:12px;color:var(--text2);padding:5px 0;border-bottom:1px solid var(--border);line-height:1.45}
+/* ── 그리드 댓글박스 ── */
+.grid-cmt-box{background:var(--bg2);padding:12px 16px;border-bottom:1px solid var(--border)}
+.cmt-item{font-size:12px;color:var(--text2);padding:4px 0;border-bottom:1px solid var(--border);line-height:1.45}
 .cmt-item:last-of-type{border-bottom:none}
 .cmt-item b{color:var(--text);font-weight:500}
 .cmt-time{color:var(--text3);font-size:10px;margin-left:4px;font-family:'DM Mono',monospace}
 .cmt-form{display:flex;gap:8px;margin-top:10px}
 .cmt-send{width:34px;height:34px;background:var(--accent);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0}
 
-/* ── 하단 바 ── */
-.bottom-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--bg);border-top:1px solid var(--border);padding:12px 20px 28px;display:flex;gap:10px;z-index:10}
-.upload-btn{display:flex;align-items:center;gap:6px;padding:10px 18px;background:var(--accent);color:#fff;border-radius:var(--rs);font-size:13px;font-weight:500;flex-shrink:0}
-.upload-btn:hover{opacity:.85}
-.del-multi-btn{display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff0f2;color:var(--red);border:1px solid #ffc0cb;border-radius:var(--rs);font-size:13px;font-weight:500}
+/* ── 리스트 뷰 ── */
+.feed-list{padding:0 18px}
+.feed-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);position:relative}
+.feed-thumb{width:80px;height:80px;border-radius:10px;flex-shrink:0;overflow:hidden;background:var(--bg2);cursor:pointer}
+.feed-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.feed-info{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between}
+.feed-top{display:flex;justify-content:space-between}
+.feed-name{font-size:13px;font-weight:600}
+.feed-time{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;flex-shrink:0}
+.feed-caption{font-size:13px;color:var(--text2);margin-top:3px;line-height:1.45}
+.feed-actions{display:flex;gap:12px;align-items:center;margin-top:8px}
+.like-btn{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text3);padding:0}
+.like-btn.liked{color:var(--red)}
+.cmt-toggle{font-size:12px;color:var(--text3);padding:0}
+.list-del{position:absolute;top:14px;right:0;width:26px;height:26px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+.feed-item:hover .list-del{opacity:1}
+.list-cmt-box{background:var(--bg2);border-radius:10px;padding:10px 14px;margin-bottom:4px}
 
-/* ── 업로드 미리보기 ── */
-.upload-preview{width:100%;min-height:160px;background:var(--bg2);border-radius:var(--rs);overflow:hidden;display:flex;align-items:center;justify-content:center;border:2px dashed var(--border2);cursor:pointer;margin-bottom:10px;position:relative}
-.upload-preview img{width:100%;height:220px;object-fit:cover}
-.upload-ph{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text3);font-size:13px;padding:32px}
-.preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:100%;padding:6px}
+/* ── 하단바 ── */
+.bottom-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--bg);border-top:1px solid var(--border);padding:12px 18px 28px;display:flex;gap:10px;z-index:20}
+.upload-btn-bar{display:flex;align-items:center;gap:6px;padding:10px 16px;background:var(--accent);color:#fff;border-radius:var(--rs);font-size:13px;font-weight:500;flex-shrink:0;border:none}
+.del-sel-btn{display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff0f2;color:var(--red);border:1px solid #ffccd5;border-radius:var(--rs);font-size:13px;font-weight:500;flex-shrink:0}
+
+/* ── 업로드 ── */
+.upload-preview{width:100%;min-height:140px;background:var(--bg2);border-radius:var(--rs);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed var(--border2);cursor:pointer;margin-bottom:10px}
+.upload-ph{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text3);font-size:13px;padding:32px 20px}
+.upload-preview img{width:100%;max-height:220px;object-fit:cover}
+.preview-grid-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:100%;padding:6px}
 .preview-cell{aspect-ratio:1;border-radius:6px;overflow:hidden;background:var(--bg3)}
 .preview-cell img{width:100%;height:100%;object-fit:cover;display:block}
+.preview-label{font-size:12px;color:var(--text2);padding:4px 0 8px;text-align:center}
+
+/* ── 모달 ── */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:flex-end;justify-content:center}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--bg);border-radius:22px 22px 0 0;padding:24px 22px 44px;width:100%;max-width:480px;animation:slideUp .2s ease;max-height:88vh;overflow-y:auto}
+@keyframes slideUp{from{transform:translateY(50px);opacity:0}}
+.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 22px}
+.modal-title{font-size:17px;font-weight:600;margin-bottom:18px;letter-spacing:-.02em}
+.album-row-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg2);border-radius:var(--rs);font-size:13px}
+.album-add-form{display:flex;gap:8px;margin-top:8px}
+.album-add-form input{flex:1}
+.album-add-form button{padding:10px 14px;background:var(--accent);color:#fff;border-radius:var(--rs);font-size:13px;font-weight:500;flex-shrink:0;border:none}
+
+/* ── 사진 옵션 모달 ── */
+.photo-option-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;font-size:14px;color:var(--text)}
+.photo-option-item:last-child{border-bottom:none}
+.photo-option-item.danger{color:var(--red)}
+.poi-icon{width:36px;height:36px;border-radius:10px;background:var(--bg2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ── 앨범 변경 모달 ── */
+.album-option{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;font-size:14px}
+.album-option:last-child{border-bottom:none}
+.album-option.selected{color:var(--accent);font-weight:500}
 
 /* ── 라이트박스 ── */
-.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:200;flex-direction:column;align-items:center;justify-content:center}
+.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:200;flex-direction:column}
 .lb.open{display:flex}
-.lb-img-wrap{position:relative;width:100%;display:flex;align-items:center;justify-content:center;flex:1}
-.lb-img-wrap img{max-width:100%;max-height:75vh;object-fit:contain;border-radius:4px;transition:opacity .18s}
-.lb-nav{position:absolute;width:40px;height:40px;background:rgba(255,255,255,.15);border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;top:50%;transform:translateY(-50%)}
-.lb-nav:hover{background:rgba(255,255,255,.28)}
-#lb-prev{left:12px}
-#lb-next{right:12px}
-.lb-nav:disabled{opacity:.2;cursor:default}
-.lb-top{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:16px 20px}
+.lb-topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;flex-shrink:0}
 .lb-counter{color:#fff;font-size:12px;font-family:'DM Mono',monospace;opacity:.6}
-.lb-close{width:36px;height:36px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.lb-close:hover{background:rgba(255,255,255,.28)}
-.lb-bottom{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 20px;width:100%}
-.lb-info{color:#fff;font-size:13px;opacity:.7}
-.lb-like{display:flex;align-items:center;gap:6px;padding:8px 20px;background:rgba(255,255,255,.1);border-radius:20px;color:#fff;font-size:13px;cursor:pointer;border:none;transition:background .15s}
-.lb-like:hover{background:rgba(255,255,255,.2)}
-.lb-like.liked{color:#ff8099}
-
-/* ── 앨범 관리 ── */
-.album-form{display:flex;gap:8px;margin-top:8px}
-.album-form input{flex:1}
-.album-form button{padding:10px 14px;background:var(--accent);color:#fff;border-radius:var(--rs);font-size:13px;font-weight:500;flex-shrink:0}
-.album-row-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg2);border-radius:var(--rs);font-size:13px}
+.lb-close-btn{width:36px;height:36px;background:rgba(255,255,255,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer}
+.lb-close-btn:hover{background:rgba(255,255,255,.22)}
+.lb-img-area{flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.lb-img-area img{max-width:100%;max-height:100%;object-fit:contain;transition:opacity .18s;padding:0 50px}
+.lb-nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;background:rgba(255,255,255,.12);border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lb-nav-btn:hover{background:rgba(255,255,255,.22)}
+.lb-nav-btn:disabled{opacity:.2;cursor:default}
+#lb-prev{left:8px}
+#lb-next{right:8px}
+.lb-bottombar{flex-shrink:0;padding:12px 18px 28px;display:flex;align-items:center;gap:12px}
+.lb-info{color:#fff;font-size:13px;opacity:.65;flex:1}
+.lb-like-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(255,255,255,.1);border-radius:20px;color:#fff;font-size:13px;border:none;cursor:pointer}
+.lb-like-btn:hover{background:rgba(255,255,255,.18)}
+.lb-like-btn.liked{color:#ffb3c0}
+.lb-opt-btn{width:36px;height:36px;background:rgba(255,255,255,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer}
+.lb-opt-btn:hover{background:rgba(255,255,255,.18)}
 
 /* ── 공통 ── */
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
 .spinner-dark{border-color:var(--border);border-top-color:var(--accent)}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-center{display:flex;justify-content:center;padding:48px}
-.empty-state{text-align:center;padding:60px 20px;color:var(--text3);font-size:14px;line-height:1.7}
-.toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--accent);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:all .28s;z-index:300;white-space:nowrap;pointer-events:none}
+.loading-center{display:flex;justify-content:center;align-items:center;padding:60px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text3);font-size:14px;line-height:1.8}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--accent);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:all .25s;z-index:400;white-space:nowrap;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
@@ -160,7 +174,7 @@ input::placeholder{color:var(--text3)}
 <div id="page-home" class="page active">
   <div class="logo">piclog.</div>
   <div class="logo-sub">코드만 있으면<br>바로 함께할 수 있어요</div>
-  <div style="margin-bottom:24px">
+  <div style="margin-bottom:20px">
     <div class="sec-label">채널 코드 입력</div>
     <div class="code-row" id="code-inputs"></div>
     <input type="text" id="join-name" placeholder="내 이름 (예: 민준)" style="margin-bottom:10px">
@@ -173,46 +187,46 @@ input::placeholder{color:var(--text3)}
 <!-- 채널 -->
 <div id="page-channel" class="page">
   <div class="ch-header">
-    <div style="display:flex;align-items:center;gap:8px">
+    <div style="display:flex;align-items:center;gap:6px">
       <button class="back-btn" id="btn-back">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <div>
-        <div class="ch-title" id="ch-title">—</div>
+        <div class="ch-title" id="ch-title"></div>
         <div class="ch-meta" id="ch-meta"></div>
       </div>
     </div>
-    <button class="code-badge" id="btn-copy-code">
+    <button class="code-badge" id="btn-copy">
       <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="1" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1"/><path d="M3 3V2a1 1 0 011-1h5a1 1 0 011 1v6a1 1 0 01-1 1H8" stroke="currentColor" stroke-width="1"/></svg>
       <span id="code-display"></span>
     </button>
   </div>
 
-  <div class="view-tabs">
-    <div class="view-tab on" id="tab-list" data-view="list">목록</div>
-    <div class="view-tab" id="tab-grid" data-view="grid">바둑판</div>
+  <div class="toolbar">
+    <div class="album-scroll" id="album-scroll"></div>
+    <div class="view-toggle">
+      <button class="vt-btn" id="vt-grid" title="바둑판">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1" fill="currentColor"/><rect x="8" y="1" width="5" height="5" rx="1" fill="currentColor"/><rect x="1" y="8" width="5" height="5" rx="1" fill="currentColor"/><rect x="8" y="8" width="5" height="5" rx="1" fill="currentColor"/></svg>
+      </button>
+      <button class="vt-btn" id="vt-list" title="목록">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="2" width="8" height="2" rx="1" fill="currentColor"/><rect x="1" y="2" width="2" height="2" rx=".5" fill="currentColor"/><rect x="5" y="6" width="8" height="2" rx="1" fill="currentColor"/><rect x="1" y="6" width="2" height="2" rx=".5" fill="currentColor"/><rect x="5" y="10" width="8" height="2" rx="1" fill="currentColor"/><rect x="1" y="10" width="2" height="2" rx=".5" fill="currentColor"/></svg>
+      </button>
+    </div>
   </div>
 
-  <div class="album-scroll" id="album-scroll"></div>
   <div id="feed-container"></div>
 
-  <div class="bottom-bar" id="bottom-bar">
-    <button class="upload-btn" id="btn-open-upload">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="4" width="12" height="9" rx="1.5" stroke="white" stroke-width="1.2"/><path d="M5 4V3a2 2 0 014 0v1" stroke="white" stroke-width="1.2"/><line x1="7" y1="7.5" x2="7" y2="10.5" stroke="white" stroke-width="1.3" stroke-linecap="round"/><path d="M5.5 8.8L7 7L8.5 8.8" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      사진 올리기
-    </button>
-    <button class="btn-outline" id="btn-open-album" style="flex:1">앨범</button>
-  </div>
+  <div class="bottom-bar" id="bottom-bar"></div>
 </div>
 
 <!-- 채널 생성 모달 -->
 <div class="modal-backdrop" id="modal-create">
-  <div class="modal" id="modal-create-inner">
+  <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">새 채널 만들기</div>
     <div class="form-gap">
-      <input type="text" id="create-channel-name" placeholder="채널 이름 (예: 제주 여행)">
-      <input type="text" id="create-user-name" placeholder="내 이름">
+      <input type="text" id="create-name" placeholder="채널 이름 (예: 제주 여행)">
+      <input type="text" id="create-uname" placeholder="내 이름">
       <button class="btn-black" id="btn-create">만들기</button>
     </div>
   </div>
@@ -220,7 +234,7 @@ input::placeholder{color:var(--text3)}
 
 <!-- 업로드 모달 -->
 <div class="modal-backdrop" id="modal-upload">
-  <div class="modal" id="modal-upload-inner">
+  <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">사진 올리기</div>
     <div class="upload-preview" id="upload-preview">
@@ -238,42 +252,63 @@ input::placeholder{color:var(--text3)}
   </div>
 </div>
 
-<!-- 앨범 모달 -->
+<!-- 앨범 관리 모달 -->
 <div class="modal-backdrop" id="modal-album">
-  <div class="modal" id="modal-album-inner">
+  <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">앨범 관리</div>
     <div id="album-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px"></div>
     <div class="sec-label">새 앨범 추가</div>
-    <div class="album-form">
+    <div class="album-add-form">
       <input type="text" id="new-album-name" placeholder="앨범 이름">
       <button id="btn-add-album">추가</button>
     </div>
   </div>
 </div>
 
+<!-- 사진 옵션 모달 (업로드 후 앨범 변경 등) -->
+<div class="modal-backdrop" id="modal-photo-opt">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="po-title">사진 옵션</div>
+    <div id="po-body"></div>
+  </div>
+</div>
+
+<!-- 앨범 변경 모달 -->
+<div class="modal-backdrop" id="modal-change-album">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">앨범 지정</div>
+    <div id="album-change-list"></div>
+  </div>
+</div>
+
 <!-- 라이트박스 -->
 <div class="lb" id="lb">
-  <div class="lb-top">
+  <div class="lb-topbar">
     <span class="lb-counter" id="lb-counter"></span>
-    <button class="lb-close" id="lb-close">
+    <button class="lb-close-btn" id="lb-close">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
     </button>
   </div>
-  <div class="lb-img-wrap">
-    <button class="lb-nav" id="lb-prev">
+  <div class="lb-img-area">
+    <button class="lb-nav-btn" id="lb-prev" disabled>
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <img id="lb-img" src="" alt="">
-    <button class="lb-nav" id="lb-next">
+    <button class="lb-nav-btn" id="lb-next">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
   </div>
-  <div class="lb-bottom">
+  <div class="lb-bottombar">
     <div class="lb-info" id="lb-info"></div>
-    <button class="lb-like" id="lb-like-btn">
-      <svg width="15" height="15" viewBox="0 0 15 15"><path id="lb-like-path" d="M7.5 12.5C7.5 12.5 2 8.8 2 5.5a3 3 0 016 0 3 3 0 016 0c0 3.3-5.5 7-5.5 7z" fill="none" stroke="white" stroke-width="1.2"/></svg>
+    <button class="lb-like-btn" id="lb-like-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14"><path id="lb-like-path" d="M7 12C7 12 1.5 8 1.5 5a2.8 2.8 0 015.5 0 2.8 2.8 0 015.5 0C12.5 8 7 12 7 12z" fill="none" stroke="white" stroke-width="1.2"/></svg>
       <span id="lb-like-count">0</span>
+    </button>
+    <button class="lb-opt-btn" id="lb-opt-btn" title="옵션">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="3" r="1.2" fill="white"/><circle cx="8" cy="8" r="1.2" fill="white"/><circle cx="8" cy="13" r="1.2" fill="white"/></svg>
     </button>
   </div>
 </div>
@@ -283,7 +318,7 @@ input::placeholder{color:var(--text3)}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ════════════════════════════════
-// 설정 — 아래 두 곳을 채워주세요
+// 설정
 // ════════════════════════════════
 const SUPABASE_URL  = 'https://qbovapyfrjttlfnrqkln.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFib3ZhcHlmcmp0dGxmbnJxa2xuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMTUxNTEsImV4cCI6MjA5MTU5MTE1MX0.-obqUTXA7RkXKo43QnCnxMz9gltfanrJT6AdAYT6UTI';   // ← Supabase anon key
@@ -294,82 +329,72 @@ const CLD_PRESET    = "sagepage's Project";      // ← Cloudinary unsigned pres
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const S = {
-  channelId: null, channelName: null, userName: null,
-  albums: [], currentAlbum: null,
-  view: 'list',
+  channelId:null, channelName:null, userName:null,
+  albums:[], currentAlbum:null,
+  view: localStorage.getItem('pk_view') || 'grid',
+  photos:[], likedSet:new Set(),
+  selectedIds:new Set(),
   userKey: localStorage.getItem('pk_uk') || crypto.randomUUID(),
-  photos: [],
-  selectedIds: new Set(),
 };
 localStorage.setItem('pk_uk', S.userKey);
 let selectedFiles = [];
+let lbIdx = 0;
 
-// ── 유틸 ──────────────────────────
+// ── 유틸 ──────────────────────────────────────
 function toast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg; el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2600);
+  setTimeout(() => el.classList.remove('show'), 2500);
 }
 function fmtTime(iso) {
-  const d = new Date(iso), diff = (Date.now() - d) / 1000;
+  const diff = (Date.now() - new Date(iso)) / 1000;
   if (diff < 60) return '방금 전';
   if (diff < 3600) return Math.floor(diff/60) + '분 전';
   if (diff < 86400) return Math.floor(diff/3600) + '시간 전';
-  return (d.getMonth()+1) + '/' + d.getDate();
+  const d = new Date(iso); return (d.getMonth()+1) + '/' + d.getDate();
 }
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-function scrollTop() {
-  window.scrollTo(0, 0);
-  document.documentElement.scrollTop = 0;
-  document.body.scrollTop = 0;
-  const ch = document.getElementById('page-channel');
-  if (ch) ch.scrollTop = 0;
-}
-
-// ── 코드 입력창 ───────────────────
+// ── 코드 입력 ─────────────────────────────────
 function buildCodeInputs() {
   const row = document.getElementById('code-inputs');
   row.innerHTML = '';
   for (let i = 0; i < 6; i++) {
     const inp = document.createElement('input');
-    inp.type = 'text'; inp.maxLength = 1;
-    inp.className = 'code-digit';
+    inp.type = 'text'; inp.maxLength = 1; inp.className = 'code-digit';
     inp.setAttribute('inputmode', 'numeric');
     inp.addEventListener('input', e => {
-      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 1);
+      e.target.value = e.target.value.replace(/\D/g,'').slice(0,1);
       if (e.target.value && i < 5) row.children[i+1].focus();
     });
     inp.addEventListener('keydown', e => {
-      if (e.key === 'Backspace' && !e.target.value && i > 0) row.children[i-1].focus();
+      if (e.key==='Backspace' && !e.target.value && i>0) row.children[i-1].focus();
     });
     row.appendChild(inp);
   }
 }
 function getCode() {
-  return Array.from(document.querySelectorAll('.code-digit')).map(i => i.value).join('');
+  return Array.from(document.querySelectorAll('.code-digit')).map(i=>i.value).join('');
 }
 
-// ── 입장 ──────────────────────────
+// ── 입장 ──────────────────────────────────────
 async function joinChannel() {
   const code = getCode(), name = document.getElementById('join-name').value.trim();
-  if (code.length < 6) return toast('채널 코드 6자리를 입력해주세요');
+  if (code.length < 6) return toast('코드 6자리를 입력해주세요');
   if (!name) return toast('이름을 입력해주세요');
   const btn = document.getElementById('btn-join');
-  btn.innerHTML = '<span class="spinner"></span>';
-  btn.disabled = true;
-  const { data, error } = await sb.from('channels').select('*').eq('id', code);
+  btn.innerHTML = '<span class="spinner"></span>'; btn.disabled = true;
+  const { data } = await sb.from('channels').select('*').eq('id', code);
   btn.innerHTML = '입장하기'; btn.disabled = false;
-  if (error || !data || !data.length) return toast('채널을 찾을 수 없어요');
+  if (!data || !data.length) return toast('채널을 찾을 수 없어요');
   S.channelId = code; S.channelName = data[0].name; S.userName = name;
   enterChannel();
 }
 
-// ── 채널 생성 ─────────────────────
 async function createChannel() {
-  const name = document.getElementById('create-channel-name').value.trim();
-  const uname = document.getElementById('create-user-name').value.trim();
+  const name = document.getElementById('create-name').value.trim();
+  const uname = document.getElementById('create-uname').value.trim();
   if (!name) return toast('채널 이름을 입력해주세요');
   if (!uname) return toast('이름을 입력해주세요');
   const btn = document.getElementById('btn-create');
@@ -383,116 +408,200 @@ async function createChannel() {
   enterChannel();
 }
 
-// ── 채널 진입 ─────────────────────
+// ── 채널 진입 — 스크롤 확실히 고정 ────────────
 function enterChannel() {
-  // 모든 페이지 숨기고 채널만 보이기
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-channel').classList.add('active');
   document.getElementById('ch-title').textContent = S.channelName;
   document.getElementById('ch-meta').textContent = '';
   document.getElementById('code-display').textContent = S.channelId;
   document.getElementById('feed-container').innerHTML = '';
   S.selectedIds.clear();
-  updateBottomBar();
-  // 스크롤 확실히 위로
-  requestAnimationFrame(() => {
-    scrollTop();
-    loadAlbums().then(() => loadFeed());
-  });
+
+  // 홈 숨기고 채널 보이기
+  document.getElementById('page-home').classList.remove('active');
+  const ch = document.getElementById('page-channel');
+  ch.classList.add('active');
+  ch.scrollTop = 0;   // ← 채널 페이지 자체 스크롤 리셋
+
+  setViewUI(S.view);
+  renderBottomBar();
+  loadAlbums().then(() => loadFeed());
 }
 
-// ── 뷰 전환 ───────────────────────
-function setView(v) {
+// ── 뷰 전환 ───────────────────────────────────
+function setViewUI(v) {
   S.view = v;
-  document.getElementById('tab-list').classList.toggle('on', v === 'list');
-  document.getElementById('tab-grid').classList.toggle('on', v === 'grid');
+  localStorage.setItem('pk_view', v);
+  document.getElementById('vt-grid').classList.toggle('on', v==='grid');
+  document.getElementById('vt-list').classList.toggle('on', v==='list');
+}
+function switchView(v) {
+  setViewUI(v);
   S.selectedIds.clear();
-  updateBottomBar();
+  renderBottomBar();
   renderFeed();
 }
 
-// ── 앨범 ──────────────────────────
+// ── 앨범 ──────────────────────────────────────
 async function loadAlbums() {
   const { data } = await sb.from('albums').select('*').eq('channel_id', S.channelId).order('created_at');
   S.albums = data || [];
   renderAlbumChips(); renderAlbumSelect(); renderAlbumList();
 }
 function renderAlbumChips() {
-  const scroll = document.getElementById('album-scroll');
-  scroll.innerHTML = '';
-  const mkChip = (label, val) => {
+  const row = document.getElementById('album-scroll');
+  row.innerHTML = '';
+  const mk = (label, val) => {
     const b = document.createElement('button');
-    b.className = 'a-chip' + (S.currentAlbum === val ? ' on' : '');
+    b.className = 'a-chip' + (S.currentAlbum===val?' on':'');
     b.textContent = label;
-    b.addEventListener('click', () => { S.currentAlbum = val; renderAlbumChips(); loadFeed(); });
-    scroll.appendChild(b);
+    b.addEventListener('click', () => { S.currentAlbum=val; renderAlbumChips(); loadFeed(); });
+    row.appendChild(b);
   };
-  mkChip('전체', null);
-  S.albums.forEach(a => mkChip(a.name, a.id));
+  mk('전체', null);
+  S.albums.forEach(a => mk(a.name, a.id));
 }
 function renderAlbumSelect() {
   const sel = document.getElementById('upload-album');
   sel.innerHTML = '<option value="">앨범 선택 (선택사항)</option>';
-  S.albums.forEach(a => { const o = document.createElement('option'); o.value = a.id; o.textContent = a.name; sel.appendChild(o); });
+  S.albums.forEach(a => { const o=document.createElement('option'); o.value=a.id; o.textContent=a.name; sel.appendChild(o); });
 }
 function renderAlbumList() {
   const list = document.getElementById('album-list');
   list.innerHTML = '';
-  if (!S.albums.length) { list.innerHTML = '<div style="font-size:13px;color:var(--text3)">앨범이 없어요</div>'; return; }
+  if (!S.albums.length) { list.innerHTML='<div style="font-size:13px;color:var(--text3)">앨범이 없어요</div>'; return; }
   S.albums.forEach(a => {
     const row = document.createElement('div');
     row.className = 'album-row-item';
     const del = document.createElement('button');
-    del.textContent = '삭제'; del.style.cssText = 'font-size:11px;color:var(--text3)';
-    del.addEventListener('click', () => deleteAlbum(a.id));
-    row.innerHTML = '<span>' + a.name + '</span>';
-    row.appendChild(del);
+    del.textContent='삭제'; del.style.cssText='font-size:11px;color:var(--text3)';
+    del.addEventListener('click', ()=>deleteAlbum(a.id));
+    row.innerHTML = '<span>'+a.name+'</span>'; row.appendChild(del);
     list.appendChild(row);
   });
 }
 async function addAlbum() {
   const name = document.getElementById('new-album-name').value.trim();
   if (!name) return toast('앨범 이름을 입력해주세요');
-  await sb.from('albums').insert({ channel_id: S.channelId, name });
+  await sb.from('albums').insert({ channel_id:S.channelId, name });
   document.getElementById('new-album-name').value = '';
   await loadAlbums(); toast('앨범을 추가했어요');
 }
 async function deleteAlbum(id) {
   await sb.from('albums').delete().eq('id', id);
-  if (S.currentAlbum === id) S.currentAlbum = null;
+  if (S.currentAlbum===id) S.currentAlbum=null;
   await loadAlbums(); loadFeed();
 }
 
-// ── 피드 로드 ─────────────────────
+// ── 피드 로드 ─────────────────────────────────
 async function loadFeed() {
   const fc = document.getElementById('feed-container');
   fc.innerHTML = '<div class="loading-center"><span class="spinner spinner-dark"></span></div>';
-  let q = sb.from('photos').select('*, comments(count), likes(count)').eq('channel_id', S.channelId).order('created_at', { ascending: false });
+  let q = sb.from('photos').select('*, comments(count), likes(count)').eq('channel_id', S.channelId).order('created_at',{ascending:false});
   if (S.currentAlbum) q = q.eq('album_id', S.currentAlbum);
   const { data } = await q;
   S.photos = data || [];
-  if (!S.photos.length) {
-    fc.innerHTML = '<div class="empty-state">아직 사진이 없어요<br>첫 사진을 올려보세요</div>'; return;
-  }
+  if (!S.photos.length) { fc.innerHTML='<div class="empty-state">아직 사진이 없어요<br>첫 사진을 올려보세요 ☁</div>'; return; }
   const { data: myLikes } = await sb.from('likes').select('photo_id').eq('user_key', S.userKey);
-  S.likedSet = new Set((myLikes || []).map(l => l.photo_id));
-  const names = new Set(S.photos.map(p => p.uploader_name));
-  document.getElementById('ch-meta').textContent = names.size + '명 참여 중';
+  S.likedSet = new Set((myLikes||[]).map(l=>l.photo_id));
+  const names = new Set(S.photos.map(p=>p.uploader_name));
+  document.getElementById('ch-meta').textContent = names.size+'명 참여 중';
   renderFeed();
 }
 
 function renderFeed() {
   const fc = document.getElementById('feed-container');
   if (!S.photos.length) return;
+  fc.innerHTML = '';
   if (S.view === 'grid') renderGrid(fc);
   else renderList(fc);
 }
 
-// ── 리스트 뷰 ─────────────────────
+// ── 그리드 뷰 ─────────────────────────────────
+function renderGrid(fc) {
+  const grid = document.createElement('div');
+  grid.className = 'photo-grid';
+  S.photos.forEach((p, idx) => {
+    const liked = S.likedSet.has(p.id);
+    const likeCount = p.likes?.[0]?.count ?? 0;
+    const cmtCount = p.comments?.[0]?.count ?? 0;
+
+    const cell = document.createElement('div');
+    cell.className = 'grid-cell' + (S.selectedIds.has(p.id)?' selected':'');
+    cell.id = 'gc-'+p.id;
+
+    const img = document.createElement('img');
+    img.src = p.image_url; img.loading='lazy'; img.alt='';
+    img.addEventListener('click', () => openLightbox(idx));
+
+    // 좋아요
+    const likeEl = document.createElement('button');
+    likeEl.className = 'g-like' + (liked?' liked':'');
+    likeEl.id = 'gl-'+p.id;
+    likeEl.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10"><path id="glp-'+p.id+'" d="M5 9C5 9 1 6 1 3.5a2 2 0 014 0 2 2 0 014 0C9 6 5 9 5 9z" fill="'+(liked?'#ffb3c0':'none')+'" stroke="'+(liked?'#ffb3c0':'white')+'" stroke-width="1"/></svg><span id="glc-'+p.id+'">'+likeCount+'</span>';
+    likeEl.addEventListener('click', e => { e.stopPropagation(); toggleLike(p.id); });
+
+    // 댓글
+    const cmtEl = document.createElement('button');
+    cmtEl.className = 'g-cmt-btn';
+    cmtEl.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1h8a.5.5 0 01.5.5v5a.5.5 0 01-.5.5H6L4 9V7H1a.5.5 0 01-.5-.5v-5A.5.5 0 011 1z" stroke="white" stroke-width="1"/></svg><span>'+(cmtCount||'')+' </span>';
+    cmtEl.addEventListener('click', e => { e.stopPropagation(); toggleGridComment(p.id, cell); });
+
+    // 삭제/선택
+    const delEl = document.createElement('button');
+    delEl.className = 'g-del';
+    delEl.innerHTML = '<svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1 1L8 8M8 1L1 8" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>';
+    delEl.addEventListener('click', e => { e.stopPropagation(); toggleGridSel(p.id); });
+
+    const overlay = document.createElement('div');
+    overlay.className = 'g-sel-overlay';
+    overlay.innerHTML = '<div class="g-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+
+    cell.append(img, likeEl, cmtEl, delEl, overlay);
+    grid.appendChild(cell);
+  });
+  fc.appendChild(grid);
+}
+
+function toggleGridSel(id) {
+  if (S.selectedIds.has(id)) S.selectedIds.delete(id); else S.selectedIds.add(id);
+  document.getElementById('gc-'+id)?.classList.toggle('selected', S.selectedIds.has(id));
+  renderBottomBar();
+}
+
+async function toggleGridComment(photoId, cell) {
+  const existId = 'gcmt-'+photoId;
+  const exist = document.getElementById(existId);
+  if (exist) { exist.remove(); return; }
+  const box = document.createElement('div');
+  box.id = existId; box.className = 'grid-cmt-box';
+  const listDiv = document.createElement('div');
+  listDiv.id = 'gcl-'+photoId; listDiv.style.marginBottom='8px';
+  const form = document.createElement('div');
+  form.className = 'cmt-form';
+  const inp = document.createElement('input');
+  inp.type='text'; inp.placeholder='댓글 달기...'; inp.id='gci-'+photoId;
+  inp.addEventListener('keydown', e => { if(e.key==='Enter') addComment(photoId, 'g'); });
+  const send = document.createElement('button');
+  send.className='cmt-send';
+  send.innerHTML='<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5L10 1L7.5 5.5L10 10L1 5.5Z" fill="white"/></svg>';
+  send.addEventListener('click', ()=>addComment(photoId, 'g'));
+  form.append(inp, send);
+  box.append(listDiv, form);
+  // 그리드 안에 삽입 (cell 바로 아래)
+  const grid = cell.closest('.photo-grid');
+  const cells = Array.from(grid.children);
+  const cellIdx = cells.indexOf(cell);
+  // 3칸 한 줄이므로 해당 줄 마지막 뒤에 삽입
+  const rowEnd = Math.ceil((cellIdx+1)/3)*3;
+  const afterCell = cells[rowEnd-1] || cells[cells.length-1];
+  afterCell.after(box);
+  await loadComments(photoId, 'g');
+}
+
+// ── 리스트 뷰 ─────────────────────────────────
 function renderList(fc) {
-  fc.innerHTML = '';
-  const feed = document.createElement('div');
-  feed.className = 'feed';
+  const wrap = document.createElement('div');
+  wrap.className = 'feed-list';
   S.photos.forEach((p, idx) => {
     const liked = S.likedSet.has(p.id);
     const likeCount = p.likes?.[0]?.count ?? 0;
@@ -501,386 +610,333 @@ function renderList(fc) {
     const item = document.createElement('div');
     item.className = 'feed-item';
 
-    // 썸네일
     const thumb = document.createElement('div');
     thumb.className = 'feed-thumb';
     const img = document.createElement('img');
-    img.src = p.image_url; img.loading = 'lazy'; img.alt = '';
+    img.src=p.image_url; img.loading='lazy'; img.alt='';
     thumb.appendChild(img);
-    thumb.addEventListener('click', () => openLightbox(idx));
+    thumb.addEventListener('click', ()=>openLightbox(idx));
 
-    // 정보
     const info = document.createElement('div');
     info.className = 'feed-info';
-    info.innerHTML = '<div><div class="feed-top"><span class="feed-name">' + p.uploader_name + '</span><span class="feed-time">' + fmtTime(p.created_at) + '</span></div>' + (p.caption ? '<div class="feed-caption">' + p.caption + '</div>' : '') + '</div>';
+    info.innerHTML = '<div><div class="feed-top"><span class="feed-name">'+p.uploader_name+'</span><span class="feed-time">'+fmtTime(p.created_at)+'</span></div>'+(p.caption?'<div class="feed-caption">'+p.caption+'</div>':'')+'</div>';
 
-    // 액션
     const actions = document.createElement('div');
     actions.className = 'feed-actions';
     const likeBtn = document.createElement('button');
-    likeBtn.className = 'like-btn' + (liked ? ' liked' : '');
-    likeBtn.id = 'lb-' + p.id;
-    likeBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 13 13"><path d="M6.5 11C6.5 11 1.5 7.5 1.5 4.5a2.5 2.5 0 015 0 2.5 2.5 0 015 0C11.5 7.5 6.5 11 6.5 11z" fill="' + (liked?'#ff4060':'none') + '" stroke="' + (liked?'#ff4060':'currentColor') + '" stroke-width="1"/></svg><span id="lc-' + p.id + '">' + likeCount + '</span>';
-    likeBtn.addEventListener('click', () => toggleLike(p.id));
+    likeBtn.className='like-btn'+(liked?' liked':''); likeBtn.id='ll-'+p.id;
+    likeBtn.innerHTML='<svg width="13" height="13" viewBox="0 0 13 13"><path id="llp-'+p.id+'" d="M6.5 11C6.5 11 1.5 7.5 1.5 4.5a2.5 2.5 0 015 0 2.5 2.5 0 015 0C11.5 7.5 6.5 11 6.5 11z" fill="'+(liked?'#ff4060':'none')+'" stroke="'+(liked?'#ff4060':'currentColor')+'" stroke-width="1"/></svg><span id="llc-'+p.id+'">'+likeCount+'</span>';
+    likeBtn.addEventListener('click', ()=>toggleLike(p.id));
     const cmtBtn = document.createElement('button');
-    cmtBtn.className = 'cmt-toggle';
-    cmtBtn.textContent = '댓글 ' + (cmtCount > 0 ? cmtCount + '개' : '달기');
-    cmtBtn.addEventListener('click', () => toggleComments(p.id, feed));
-    actions.appendChild(likeBtn); actions.appendChild(cmtBtn);
+    cmtBtn.className='cmt-toggle'; cmtBtn.id='ctb-'+p.id;
+    cmtBtn.textContent='댓글 '+(cmtCount>0?cmtCount+'개':'달기');
+    cmtBtn.addEventListener('click', ()=>toggleListComment(p.id, wrap));
+    actions.append(likeBtn, cmtBtn);
     info.appendChild(actions);
 
-    // 삭제 버튼
     const delBtn = document.createElement('button');
-    delBtn.className = 'del-btn';
-    delBtn.innerHTML = '<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 1L10 10M10 1L1 10" stroke="var(--text3)" stroke-width="1.4" stroke-linecap="round"/></svg>';
-    delBtn.addEventListener('click', () => deletePhoto(p.id));
+    delBtn.className='list-del';
+    delBtn.innerHTML='<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1L9 9M9 1L1 9" stroke="var(--text3)" stroke-width="1.4" stroke-linecap="round"/></svg>';
+    delBtn.addEventListener('click', ()=>openPhotoOptions(p.id));
 
-    item.appendChild(thumb); item.appendChild(info); item.appendChild(delBtn);
-    feed.appendChild(item);
+    item.append(thumb, info, delBtn);
+    wrap.appendChild(item);
 
-    // 댓글박스
     const cmtBox = document.createElement('div');
-    cmtBox.id = 'cmts-' + p.id;
-    cmtBox.className = 'comments-box hidden';
-    const cmtList = document.createElement('div');
-    cmtList.id = 'cmt-list-' + p.id;
-    cmtList.style.marginBottom = '8px';
-    const cmtForm = document.createElement('div');
-    cmtForm.className = 'cmt-form';
-    const cmtInp = document.createElement('input');
-    cmtInp.type = 'text'; cmtInp.placeholder = '댓글 달기...'; cmtInp.id = 'cmt-input-' + p.id;
-    cmtInp.addEventListener('keydown', e => { if (e.key === 'Enter') addComment(p.id); });
-    const sendBtn = document.createElement('button');
-    sendBtn.className = 'cmt-send';
-    sendBtn.innerHTML = '<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5L10 1L7.5 5.5L10 10L1 5.5Z" fill="white"/></svg>';
-    sendBtn.addEventListener('click', () => addComment(p.id));
-    cmtForm.appendChild(cmtInp); cmtForm.appendChild(sendBtn);
-    cmtBox.appendChild(cmtList); cmtBox.appendChild(cmtForm);
-    feed.appendChild(cmtBox);
+    cmtBox.id='lcmt-'+p.id; cmtBox.className='list-cmt-box hidden';
+    const listDiv=document.createElement('div'); listDiv.id='lcl-'+p.id; listDiv.style.marginBottom='8px';
+    const form=document.createElement('div'); form.className='cmt-form';
+    const inp=document.createElement('input'); inp.type='text'; inp.placeholder='댓글 달기...'; inp.id='lci-'+p.id;
+    inp.addEventListener('keydown', e=>{if(e.key==='Enter')addComment(p.id,'l');});
+    const send=document.createElement('button'); send.className='cmt-send';
+    send.innerHTML='<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5L10 1L7.5 5.5L10 10L1 5.5Z" fill="white"/></svg>';
+    send.addEventListener('click',()=>addComment(p.id,'l'));
+    form.append(inp,send); cmtBox.append(listDiv,form);
+    wrap.appendChild(cmtBox);
   });
-  fc.appendChild(feed);
+  fc.appendChild(wrap);
 }
 
-// ── 그리드 뷰 ─────────────────────
-function renderGrid(fc) {
-  fc.innerHTML = '';
-  const grid = document.createElement('div');
-  grid.className = 'photo-grid';
-  S.photos.forEach((p, idx) => {
-    const liked = S.likedSet.has(p.id);
-    const likeCount = p.likes?.[0]?.count ?? 0;
-    const cell = document.createElement('div');
-    cell.className = 'grid-cell' + (S.selectedIds.has(p.id) ? ' selected' : '');
-    cell.id = 'grid-' + p.id;
-    const img = document.createElement('img');
-    img.src = p.image_url; img.loading = 'lazy'; img.alt = '';
-    img.addEventListener('click', () => openLightbox(idx));
-
-    const likeEl = document.createElement('div');
-    likeEl.className = 'grid-like' + (liked ? ' liked-g' : '');
-    likeEl.id = 'glb-' + p.id;
-    likeEl.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 9C5 9 1 6 1 3.5a2 2 0 014 0 2 2 0 014 0C9 6 5 9 5 9z" fill="' + (liked?'#ff8099':'none') + '" stroke="' + (liked?'#ff8099':'white') + '" stroke-width="1"/></svg><span id="glc-' + p.id + '">' + likeCount + '</span>';
-    likeEl.addEventListener('click', e => { e.stopPropagation(); toggleLike(p.id); });
-
-    const delEl = document.createElement('div');
-    delEl.className = 'grid-del';
-    delEl.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1L9 9M9 1L1 9" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>';
-    delEl.addEventListener('click', e => { e.stopPropagation(); toggleGridSelect(p.id); });
-
-    const overlay = document.createElement('div');
-    overlay.className = 'grid-select-overlay';
-    overlay.innerHTML = '<div class="grid-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
-
-    cell.appendChild(img); cell.appendChild(likeEl); cell.appendChild(delEl); cell.appendChild(overlay);
-    grid.appendChild(cell);
-  });
-  fc.appendChild(grid);
-}
-
-function toggleGridSelect(id) {
-  if (S.selectedIds.has(id)) S.selectedIds.delete(id);
-  else S.selectedIds.add(id);
-  const cell = document.getElementById('grid-' + id);
-  if (cell) cell.classList.toggle('selected', S.selectedIds.has(id));
-  updateBottomBar();
-}
-
-function updateBottomBar() {
-  const bar = document.getElementById('bottom-bar');
-  if (S.view === 'grid' && S.selectedIds.size > 0) {
-    bar.innerHTML = '<button class="del-multi-btn" id="btn-del-multi"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M5 4V2.5a.5.5 0 01.5-.5h3a.5.5 0 01.5.5V4M11 4l-.8 7.5a.5.5 0 01-.5.5H4.3a.5.5 0 01-.5-.5L3 4" stroke="var(--red)" stroke-width="1.2" stroke-linecap="round"/></svg>' + S.selectedIds.size + '장 삭제</button><button class="btn-outline" style="flex:1" id="btn-cancel-sel">취소</button>';
-    document.getElementById('btn-del-multi').addEventListener('click', deleteSelected);
-    document.getElementById('btn-cancel-sel').addEventListener('click', () => { S.selectedIds.clear(); renderFeed(); updateBottomBar(); });
-  } else {
-    bar.innerHTML = '<button class="upload-btn" id="btn-open-upload"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="4" width="12" height="9" rx="1.5" stroke="white" stroke-width="1.2"/><path d="M5 4V3a2 2 0 014 0v1" stroke="white" stroke-width="1.2"/><line x1="7" y1="7.5" x2="7" y2="10.5" stroke="white" stroke-width="1.3" stroke-linecap="round"/><path d="M5.5 8.8L7 7L8.5 8.8" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>사진 올리기</button><button class="btn-outline" style="flex:1" id="btn-open-album">앨범</button>';
-    document.getElementById('btn-open-upload').addEventListener('click', openUploadModal);
-    document.getElementById('btn-open-album').addEventListener('click', () => openModal('modal-album'));
-  }
-}
-
-// ── 댓글 ──────────────────────────
-async function toggleComments(photoId, feed) {
-  const box = document.getElementById('cmts-' + photoId);
+async function toggleListComment(photoId, wrap) {
+  const box = document.getElementById('lcmt-'+photoId);
   if (!box) return;
   if (box.classList.contains('hidden')) {
     box.classList.remove('hidden');
-    await loadComments(photoId);
-  } else {
-    box.classList.add('hidden');
-  }
+    await loadComments(photoId, 'l');
+  } else box.classList.add('hidden');
 }
-async function loadComments(photoId) {
-  const list = document.getElementById('cmt-list-' + photoId);
+
+// ── 댓글 공통 ─────────────────────────────────
+async function loadComments(photoId, mode) {
+  const listId = mode==='g' ? 'gcl-'+photoId : 'lcl-'+photoId;
+  const list = document.getElementById(listId);
+  if (!list) return;
   const { data } = await sb.from('comments').select('*').eq('photo_id', photoId).order('created_at');
-  if (!data || !data.length) { list.innerHTML = '<div style="font-size:12px;color:var(--text3)">댓글이 없어요</div>'; return; }
-  list.innerHTML = data.map(c => '<div class="cmt-item"><b>' + c.author_name + '</b> ' + c.content + '<span class="cmt-time">' + fmtTime(c.created_at) + '</span></div>').join('');
+  if (!data||!data.length) { list.innerHTML='<div style="font-size:12px;color:var(--text3)">댓글이 없어요</div>'; return; }
+  list.innerHTML = data.map(c=>'<div class="cmt-item"><b>'+c.author_name+'</b> '+c.content+'<span class="cmt-time">'+fmtTime(c.created_at)+'</span></div>').join('');
 }
-async function addComment(photoId) {
-  const inp = document.getElementById('cmt-input-' + photoId);
-  const content = inp.value.trim();
+async function addComment(photoId, mode) {
+  const inpId = mode==='g' ? 'gci-'+photoId : 'lci-'+photoId;
+  const inp = document.getElementById(inpId);
+  const content = inp?.value.trim();
   if (!content) return;
   inp.value = '';
-  await sb.from('comments').insert({ photo_id: photoId, author_name: S.userName, content });
-  await loadComments(photoId);
+  await sb.from('comments').insert({ photo_id:photoId, author_name:S.userName, content });
+  await loadComments(photoId, mode);
+  // 댓글 수 업데이트
+  const ph = S.photos.find(p=>p.id===photoId);
+  if (ph?.comments?.[0]) ph.comments[0].count++;
+  const ctb = document.getElementById('ctb-'+photoId);
+  if (ctb) { const c=ph?.comments?.[0]?.count??0; ctb.textContent='댓글 '+(c>0?c+'개':'달기'); }
 }
 
-// ── 좋아요 ────────────────────────
+// ── 좋아요 ────────────────────────────────────
 async function toggleLike(photoId) {
   const liked = S.likedSet.has(photoId);
-  // 로컬 즉시 반영
   if (liked) S.likedSet.delete(photoId); else S.likedSet.add(photoId);
-  const photo = S.photos.find(p => p.id === photoId);
-  if (photo) {
-    const cur = photo.likes?.[0]?.count ?? 0;
-    if (photo.likes?.[0]) photo.likes[0].count = liked ? Math.max(0, cur-1) : cur+1;
-  }
-  // UI 업데이트
-  updateLikeUI(photoId, !liked);
-  // DB
+  const ph = S.photos.find(p=>p.id===photoId);
+  const cur = ph?.likes?.[0]?.count ?? 0;
+  const next = liked ? Math.max(0,cur-1) : cur+1;
+  if (ph?.likes?.[0]) ph.likes[0].count = next;
+  updateLikeUI(photoId, !liked, next);
   if (liked) {
-    await sb.from('likes').delete().eq('photo_id', photoId).eq('user_key', S.userKey);
-    await sb.from('photos').update({ likes: Math.max(0, (photo?.likes?.[0]?.count ?? 0)) }).eq('id', photoId);
+    await sb.from('likes').delete().eq('photo_id',photoId).eq('user_key',S.userKey);
+    await sb.from('photos').update({likes:next}).eq('id',photoId);
   } else {
-    await sb.from('likes').insert({ photo_id: photoId, user_key: S.userKey });
-    await sb.from('photos').update({ likes: photo?.likes?.[0]?.count ?? 0 }).eq('id', photoId);
+    try { await sb.from('likes').insert({photo_id:photoId,user_key:S.userKey}); } catch(e){}
+    await sb.from('photos').update({likes:next}).eq('id',photoId);
   }
 }
-function updateLikeUI(photoId, liked) {
-  const count = S.photos.find(p=>p.id===photoId)?.likes?.[0]?.count ?? 0;
-  // 리스트
-  const lb = document.getElementById('lb-' + photoId);
-  const lc = document.getElementById('lc-' + photoId);
-  if (lb) { lb.classList.toggle('liked', liked); const path = lb.querySelector('path'); if(path){path.setAttribute('fill',liked?'#ff4060':'none');path.setAttribute('stroke',liked?'#ff4060':'currentColor');} }
-  if (lc) lc.textContent = count;
+function updateLikeUI(photoId, liked, count) {
   // 그리드
-  const glb = document.getElementById('glb-' + photoId);
-  const glc = document.getElementById('glc-' + photoId);
-  if (glb) { glb.classList.toggle('liked-g', liked); const path = glb.querySelector('path'); if(path){path.setAttribute('fill',liked?'#ff8099':'none');path.setAttribute('stroke',liked?'#ff8099':'white');} }
-  if (glc) glc.textContent = count;
+  const gl=document.getElementById('gl-'+photoId);
+  const glp=document.getElementById('glp-'+photoId);
+  const glc=document.getElementById('glc-'+photoId);
+  if(gl) gl.classList.toggle('liked',liked);
+  if(glp){glp.setAttribute('fill',liked?'#ffb3c0':'none');glp.setAttribute('stroke',liked?'#ffb3c0':'white');}
+  if(glc) glc.textContent=count;
+  // 리스트
+  const ll=document.getElementById('ll-'+photoId);
+  const llp=document.getElementById('llp-'+photoId);
+  const llc=document.getElementById('llc-'+photoId);
+  if(ll) ll.classList.toggle('liked',liked);
+  if(llp){llp.setAttribute('fill',liked?'#ff4060':'none');llp.setAttribute('stroke',liked?'#ff4060':'currentColor');}
+  if(llc) llc.textContent=count;
   // 라이트박스
-  const lbBtn = document.getElementById('lb-like-btn');
-  const lbPath = document.getElementById('lb-like-path');
-  const lbCount = document.getElementById('lb-like-count');
-  if (lbBtn && lbBtn.dataset.id === photoId) {
-    lbBtn.classList.toggle('liked', liked);
-    if(lbPath){lbPath.setAttribute('fill',liked?'#ff8099':'none');lbPath.setAttribute('stroke',liked?'#ff8099':'white');}
-    if(lbCount) lbCount.textContent = count;
+  const lbBtn=document.getElementById('lb-like-btn');
+  if(lbBtn && lbBtn.dataset.id===photoId) {
+    lbBtn.classList.toggle('liked',liked);
+    const lbp=document.getElementById('lb-like-path');
+    if(lbp){lbp.setAttribute('fill',liked?'#ffb3c0':'none');lbp.setAttribute('stroke',liked?'#ffb3c0':'white');}
+    document.getElementById('lb-like-count').textContent=count;
   }
 }
 
-// ── 삭제 ──────────────────────────
-async function deletePhoto(id) {
-  if (!confirm('이 사진을 삭제할까요?')) return;
-  await sb.from('photos').delete().eq('id', id);
-  toast('삭제했어요');
-  await loadFeed();
+// ── 삭제 ──────────────────────────────────────
+function openPhotoOptions(photoId) {
+  const ph = S.photos.find(p=>p.id===photoId);
+  const albumName = ph?.album_id ? (S.albums.find(a=>a.id===ph.album_id)?.name||'앨범') : '없음';
+  document.getElementById('po-title').textContent = ph?.uploader_name||'사진';
+  const body = document.getElementById('po-body');
+  body.innerHTML = '';
+  const opts = [
+    { icon:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--text2)" stroke-width="1.2"/><path d="M5 8h6M8 5v6" stroke="var(--text2)" stroke-width="1.2" stroke-linecap="round"/></svg>', label:'앨범 지정 · 현재: '+albumName, action:()=>{ closeModal('modal-photo-opt'); openChangeAlbum(photoId); } },
+    { icon:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 4h10M6 4V3a1 1 0 011-1h2a1 1 0 011 1v1M13 4l-.8 8a1 1 0 01-1 .9H4.8a1 1 0 01-1-.9L3 4" stroke="var(--red)" stroke-width="1.2" stroke-linecap="round"/></svg>', label:'삭제', danger:true, action:async()=>{ closeModal('modal-photo-opt'); if(!confirm('삭제할까요?'))return; await sb.from('photos').delete().eq('id',photoId); toast('삭제했어요'); await loadFeed(); } },
+  ];
+  opts.forEach(opt => {
+    const row = document.createElement('div');
+    row.className='photo-option-item'+(opt.danger?' danger':'');
+    row.innerHTML='<div class="poi-icon">'+opt.icon+'</div>'+opt.label;
+    row.addEventListener('click', opt.action);
+    body.appendChild(row);
+  });
+  openModal('modal-photo-opt');
 }
+
+function openChangeAlbum(photoId) {
+  const list = document.getElementById('album-change-list');
+  list.innerHTML = '';
+  const ph = S.photos.find(p=>p.id===photoId);
+  const mk = (label, val) => {
+    const row = document.createElement('div');
+    row.className='album-option'+(ph?.album_id===val?' selected':'');
+    row.innerHTML='<span>'+label+'</span>'+(ph?.album_id===val?'<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7L6 11L12 3" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>':'');
+    row.addEventListener('click', async ()=>{
+      await sb.from('photos').update({album_id:val||null}).eq('id',photoId);
+      if(ph) ph.album_id=val||null;
+      closeModal('modal-change-album');
+      toast('앨범을 변경했어요');
+      await loadFeed();
+    });
+    list.appendChild(row);
+  };
+  mk('앨범 없음', null);
+  S.albums.forEach(a=>mk(a.name, a.id));
+  openModal('modal-change-album');
+}
+
 async function deleteSelected() {
-  if (!S.selectedIds.size) return;
-  if (!confirm(S.selectedIds.size + '장을 삭제할까요?')) return;
-  for (const id of S.selectedIds) {
-    await sb.from('photos').delete().eq('id', id);
-  }
+  if(!S.selectedIds.size) return;
+  if(!confirm(S.selectedIds.size+'장을 삭제할까요?')) return;
+  for(const id of S.selectedIds) await sb.from('photos').delete().eq('id',id);
   S.selectedIds.clear();
-  toast('삭제했어요');
-  await loadFeed();
-  updateBottomBar();
+  toast('삭제했어요'); await loadFeed(); renderBottomBar();
 }
 
-// ── 업로드 ────────────────────────
+// ── 업로드 ────────────────────────────────────
 function openUploadModal() {
-  selectedFiles = [];
-  document.getElementById('upload-preview').innerHTML = '<div class="upload-ph"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="7" width="24" height="18" rx="3" stroke="#aaa" stroke-width="1.5"/><path d="M9 7V5a5 5 0 0110 0v2" stroke="#aaa" stroke-width="1.5"/><line x1="14" y1="13" x2="14" y2="20" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/><path d="M11 16L14 13L17 16" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>클릭해서 사진 선택 (여러 장 가능)</span></div>';
-  document.getElementById('upload-caption').value = '';
-  document.getElementById('file-input').value = '';
+  selectedFiles=[];
+  document.getElementById('upload-preview').innerHTML='<div class="upload-ph"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="7" width="24" height="18" rx="3" stroke="#aaa" stroke-width="1.5"/><path d="M9 7V5a5 5 0 0110 0v2" stroke="#aaa" stroke-width="1.5"/><line x1="14" y1="13" x2="14" y2="20" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/><path d="M11 16L14 13L17 16" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>클릭해서 사진 선택 (여러 장 가능)</span></div>';
+  document.getElementById('upload-caption').value='';
+  document.getElementById('file-input').value='';
   openModal('modal-upload');
 }
 async function uploadPhoto() {
-  if (!selectedFiles.length) return toast('사진을 선택해주세요');
-  const btn = document.getElementById('btn-upload');
-  const albumId = document.getElementById('upload-album').value || null;
-  const caption = document.getElementById('upload-caption').value.trim();
-  btn.disabled = true;
-  let done = 0;
+  if(!selectedFiles.length) return toast('사진을 선택해주세요');
+  const btn=document.getElementById('btn-upload');
+  const albumId=document.getElementById('upload-album').value||null;
+  const caption=document.getElementById('upload-caption').value.trim();
+  btn.disabled=true;
+  let done=0;
   try {
-    for (const file of selectedFiles) {
-      btn.innerHTML = '<span class="spinner"></span> ' + (done+1) + ' / ' + selectedFiles.length;
-      const form = new FormData();
-      form.append('file', file);
-      form.append('upload_preset', CLD_PRESET);
-      const res = await fetch('https://api.cloudinary.com/v1_1/' + CLD_CLOUD + '/image/upload', { method:'POST', body:form });
-      const json = await res.json();
-      if (!json.secure_url) throw new Error('실패');
-      await sb.from('photos').insert({ channel_id: S.channelId, album_id: albumId, uploader_name: S.userName, image_url: json.secure_url, caption: caption || null, likes: 0 });
+    for(const file of selectedFiles) {
+      btn.innerHTML='<span class="spinner"></span> '+(done+1)+'/'+selectedFiles.length;
+      const form=new FormData();
+      form.append('file',file); form.append('upload_preset',CLD_PRESET);
+      const res=await fetch('https://api.cloudinary.com/v1_1/'+CLD_CLOUD+'/image/upload',{method:'POST',body:form});
+      const json=await res.json();
+      if(!json.secure_url) throw new Error('실패');
+      await sb.from('photos').insert({channel_id:S.channelId,album_id:albumId,uploader_name:S.userName,image_url:json.secure_url,caption:caption||null,likes:0});
       done++;
     }
     closeModal('modal-upload');
-    toast(done + '장 올렸어요!');
+    toast(done+'장 올렸어요!');
     await loadFeed();
-  } catch(e) {
-    toast('오류가 발생했어요 (' + done + '/' + selectedFiles.length + ')');
-  }
-  btn.innerHTML = '올리기'; btn.disabled = false;
+  } catch(e) { toast('오류가 발생했어요 ('+done+'/'+selectedFiles.length+')'); }
+  btn.innerHTML='올리기'; btn.disabled=false;
 }
 
-// ── 라이트박스 ────────────────────
-let lbIdx = 0;
+// ── 라이트박스 ────────────────────────────────
 function openLightbox(idx) {
-  lbIdx = idx;
-  showLbSlide();
+  lbIdx=idx; showLbSlide();
   document.getElementById('lb').classList.add('open');
-  document.body.style.overflow = 'hidden';
 }
 function showLbSlide() {
-  const p = S.photos[lbIdx];
-  if (!p) return;
-  const img = document.getElementById('lb-img');
-  img.style.opacity = '0';
-  img.src = p.image_url;
-  img.onload = () => { img.style.opacity = '1'; };
-  document.getElementById('lb-info').textContent = p.uploader_name + ' · ' + fmtTime(p.created_at);
-  document.getElementById('lb-counter').textContent = (lbIdx+1) + ' / ' + S.photos.length;
-  document.getElementById('lb-prev').disabled = lbIdx === 0;
-  document.getElementById('lb-next').disabled = lbIdx === S.photos.length - 1;
-  // 좋아요 상태
-  const liked = S.likedSet.has(p.id);
-  const count = p.likes?.[0]?.count ?? 0;
-  const lbBtn = document.getElementById('lb-like-btn');
-  const lbPath = document.getElementById('lb-like-path');
-  lbBtn.dataset.id = p.id;
-  lbBtn.classList.toggle('liked', liked);
-  lbPath.setAttribute('fill', liked ? '#ff8099' : 'none');
-  lbPath.setAttribute('stroke', liked ? '#ff8099' : 'white');
-  document.getElementById('lb-like-count').textContent = count;
+  const p=S.photos[lbIdx]; if(!p) return;
+  const img=document.getElementById('lb-img');
+  img.style.opacity='0'; img.src=p.image_url;
+  img.onload=()=>{ img.style.opacity='1'; };
+  document.getElementById('lb-info').textContent=p.uploader_name+' · '+fmtTime(p.created_at);
+  document.getElementById('lb-counter').textContent=(lbIdx+1)+' / '+S.photos.length;
+  document.getElementById('lb-prev').disabled=lbIdx===0;
+  document.getElementById('lb-next').disabled=lbIdx===S.photos.length-1;
+  const liked=S.likedSet.has(p.id);
+  const count=p.likes?.[0]?.count??0;
+  const lbBtn=document.getElementById('lb-like-btn');
+  lbBtn.dataset.id=p.id;
+  lbBtn.classList.toggle('liked',liked);
+  document.getElementById('lb-like-path').setAttribute('fill',liked?'#ffb3c0':'none');
+  document.getElementById('lb-like-path').setAttribute('stroke',liked?'#ffb3c0':'white');
+  document.getElementById('lb-like-count').textContent=count;
 }
 function closeLightbox() {
   document.getElementById('lb').classList.remove('open');
-  document.getElementById('lb-img').src = '';
-  document.body.style.overflow = '';
+  document.getElementById('lb-img').src='';
 }
 
-// ── 이벤트 연결 ───────────────────
+// ── 하단바 렌더 ───────────────────────────────
+function renderBottomBar() {
+  const bar=document.getElementById('bottom-bar');
+  if(S.view==='grid' && S.selectedIds.size>0) {
+    bar.innerHTML='<button class="del-sel-btn" id="btn-del-sel"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M5 4V2.5a.5.5 0 01.5-.5h3a.5.5 0 01.5.5V4M11 4l-.8 7.5a.5.5 0 01-.5.5H4.3a.5.5 0 01-.5-.5L3 4" stroke="var(--red)" stroke-width="1.2" stroke-linecap="round"/></svg>'+S.selectedIds.size+'장 삭제</button><button class="btn-outline" id="btn-cancel-sel" style="flex:1">취소</button>';
+    document.getElementById('btn-del-sel').addEventListener('click', deleteSelected);
+    document.getElementById('btn-cancel-sel').addEventListener('click', ()=>{ S.selectedIds.clear(); renderFeed(); renderBottomBar(); });
+  } else {
+    bar.innerHTML='<button class="upload-btn-bar" id="btn-upload-open"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="4" width="12" height="9" rx="1.5" stroke="white" stroke-width="1.2"/><path d="M5 4V3a2 2 0 014 0v1" stroke="white" stroke-width="1.2"/><line x1="7" y1="7.5" x2="7" y2="10.5" stroke="white" stroke-width="1.3" stroke-linecap="round"/><path d="M5.5 8.8L7 7L8.5 8.8" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>사진 올리기</button><button class="btn-outline" id="btn-album-open" style="flex:1">앨범</button>';
+    document.getElementById('btn-upload-open').addEventListener('click', openUploadModal);
+    document.getElementById('btn-album-open').addEventListener('click', ()=>openModal('modal-album'));
+  }
+}
+
+// ── DOMContentLoaded ──────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   buildCodeInputs();
+  setViewUI(S.view);
 
-  // 홈
   document.getElementById('btn-join').addEventListener('click', joinChannel);
-  document.getElementById('btn-open-create').addEventListener('click', () => openModal('modal-create'));
-
-  // 뒤로가기
-  document.getElementById('btn-back').addEventListener('click', () => {
-    S.channelId = null; buildCodeInputs();
-    document.getElementById('join-name').value = '';
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page-home').classList.add('active');
-    scrollTop();
-  });
-
-  // 코드 복사
-  document.getElementById('btn-copy-code').addEventListener('click', () => {
-    navigator.clipboard.writeText(S.channelId).catch(()=>{});
-    toast('코드 복사됨: ' + S.channelId);
-  });
-
-  // 뷰 탭
-  document.getElementById('tab-list').addEventListener('click', () => setView('list'));
-  document.getElementById('tab-grid').addEventListener('click', () => setView('grid'));
-
-  // 채널 생성
+  document.getElementById('btn-open-create').addEventListener('click', ()=>openModal('modal-create'));
   document.getElementById('btn-create').addEventListener('click', createChannel);
 
-  // 업로드
-  document.getElementById('upload-preview').addEventListener('click', () => document.getElementById('file-input').click());
-  document.getElementById('file-input').addEventListener('change', e => {
-    selectedFiles = Array.from(e.target.files);
-    if (!selectedFiles.length) return;
-    const preview = document.getElementById('upload-preview');
-    if (selectedFiles.length === 1) {
-      const reader = new FileReader();
-      reader.onload = ev => { preview.innerHTML = '<img src="' + ev.target.result + '" alt="">'; };
-      reader.readAsDataURL(selectedFiles[0]);
+  document.getElementById('btn-back').addEventListener('click', ()=>{
+    S.channelId=null; buildCodeInputs();
+    document.getElementById('join-name').value='';
+    document.getElementById('page-channel').classList.remove('active');
+    document.getElementById('page-home').classList.add('active');
+  });
+
+  document.getElementById('btn-copy').addEventListener('click', ()=>{
+    navigator.clipboard.writeText(S.channelId).catch(()=>{});
+    toast('코드 복사됨: '+S.channelId);
+  });
+
+  document.getElementById('vt-grid').addEventListener('click', ()=>switchView('grid'));
+  document.getElementById('vt-list').addEventListener('click', ()=>switchView('list'));
+
+  document.getElementById('upload-preview').addEventListener('click', ()=>document.getElementById('file-input').click());
+  document.getElementById('file-input').addEventListener('change', e=>{
+    selectedFiles=Array.from(e.target.files);
+    if(!selectedFiles.length) return;
+    const prev=document.getElementById('upload-preview');
+    if(selectedFiles.length===1) {
+      const r=new FileReader();
+      r.onload=ev=>{ prev.innerHTML='<img src="'+ev.target.result+'" alt="">'; };
+      r.readAsDataURL(selectedFiles[0]);
     } else {
-      const grid = document.createElement('div');
-      grid.className = 'preview-grid';
-      preview.innerHTML = '';
-      selectedFiles.slice(0, 9).forEach(f => {
-        const cell = document.createElement('div');
-        cell.className = 'preview-cell';
-        const img = document.createElement('img');
-        const reader = new FileReader();
-        reader.onload = ev => { img.src = ev.target.result; };
-        reader.readAsDataURL(f);
-        cell.appendChild(img);
-        grid.appendChild(cell);
+      const g=document.createElement('div'); g.className='preview-grid-wrap';
+      prev.innerHTML='';
+      selectedFiles.slice(0,9).forEach(f=>{
+        const cell=document.createElement('div'); cell.className='preview-cell';
+        const img=document.createElement('img');
+        const r=new FileReader();
+        r.onload=ev=>{img.src=ev.target.result;};
+        r.readAsDataURL(f);
+        cell.appendChild(img); g.appendChild(cell);
       });
-      const label = document.createElement('div');
-      label.style.cssText = 'text-align:center;font-size:12px;color:var(--text2);padding:6px 0';
-      label.textContent = selectedFiles.length + '장 선택됨';
-      preview.appendChild(grid);
-      preview.appendChild(label);
+      const lbl=document.createElement('div'); lbl.className='preview-label'; lbl.textContent=selectedFiles.length+'장 선택됨';
+      prev.appendChild(g); prev.appendChild(lbl);
     }
   });
   document.getElementById('btn-upload').addEventListener('click', uploadPhoto);
-
-  // 앨범
   document.getElementById('btn-add-album').addEventListener('click', addAlbum);
-
-  // 초기 하단바
-  updateBottomBar();
 
   // 라이트박스
   document.getElementById('lb-close').addEventListener('click', closeLightbox);
-  document.getElementById('lb-prev').addEventListener('click', () => { if (lbIdx > 0) { lbIdx--; showLbSlide(); } });
-  document.getElementById('lb-next').addEventListener('click', () => { if (lbIdx < S.photos.length-1) { lbIdx++; showLbSlide(); } });
-  document.getElementById('lb-like-btn').addEventListener('click', () => {
-    const id = document.getElementById('lb-like-btn').dataset.id;
-    if (id) toggleLike(id);
+  document.getElementById('lb-prev').addEventListener('click', ()=>{ if(lbIdx>0){lbIdx--;showLbSlide();} });
+  document.getElementById('lb-next').addEventListener('click', ()=>{ if(lbIdx<S.photos.length-1){lbIdx++;showLbSlide();} });
+  document.getElementById('lb-like-btn').addEventListener('click', ()=>{
+    const id=document.getElementById('lb-like-btn').dataset.id; if(id) toggleLike(id);
   });
-  // 배경 클릭 닫기
-  document.getElementById('lb').addEventListener('click', e => {
-    if (e.target === document.getElementById('lb')) closeLightbox();
+  document.getElementById('lb-opt-btn').addEventListener('click', ()=>{
+    const id=document.getElementById('lb-like-btn').dataset.id;
+    if(id){ closeLightbox(); openPhotoOptions(id); }
   });
-  // 키보드
-  document.addEventListener('keydown', e => {
-    if (!document.getElementById('lb').classList.contains('open')) return;
-    if (e.key === 'ArrowLeft' && lbIdx > 0) { lbIdx--; showLbSlide(); }
-    else if (e.key === 'ArrowRight' && lbIdx < S.photos.length-1) { lbIdx++; showLbSlide(); }
-    else if (e.key === 'Escape') closeLightbox();
+  document.getElementById('lb').addEventListener('click', e=>{ if(e.target===document.getElementById('lb')) closeLightbox(); });
+  document.addEventListener('keydown', e=>{
+    if(!document.getElementById('lb').classList.contains('open')) return;
+    if(e.key==='ArrowLeft'&&lbIdx>0){lbIdx--;showLbSlide();}
+    else if(e.key==='ArrowRight'&&lbIdx<S.photos.length-1){lbIdx++;showLbSlide();}
+    else if(e.key==='Escape') closeLightbox();
   });
-  // 터치 스와이프
-  let tsX = 0;
-  document.getElementById('lb').addEventListener('touchstart', e => { tsX = e.touches[0].clientX; }, { passive:true });
-  document.getElementById('lb').addEventListener('touchend', e => {
-    const diff = tsX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) {
-      if (diff > 0 && lbIdx < S.photos.length-1) { lbIdx++; showLbSlide(); }
-      else if (diff < 0 && lbIdx > 0) { lbIdx--; showLbSlide(); }
-    }
+  let tsX=0;
+  document.getElementById('lb').addEventListener('touchstart',e=>{tsX=e.touches[0].clientX;},{passive:true});
+  document.getElementById('lb').addEventListener('touchend',e=>{
+    const d=tsX-e.changedTouches[0].clientX;
+    if(Math.abs(d)>40){if(d>0&&lbIdx<S.photos.length-1){lbIdx++;showLbSlide();}else if(d<0&&lbIdx>0){lbIdx--;showLbSlide();}}
   });
 
   // 모달 바깥 클릭 닫기
-  document.querySelectorAll('.modal-backdrop').forEach(b => {
-    b.addEventListener('click', e => { if (e.target === b) closeModal(b.id); });
+  document.querySelectorAll('.modal-backdrop').forEach(b=>{
+    b.addEventListener('click',e=>{ if(e.target===b) closeModal(b.id); });
   });
 });
 </script>
