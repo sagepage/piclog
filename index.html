@@ -295,6 +295,9 @@ async function joinChannel() {
   const { data, error } = await sb.from('channels').select('*').eq('id', code);
   if (error || !data || data.length === 0) return toast('채널을 찾을 수 없어요');
   state.channelId = code; state.channelName = data[0].name; state.userName = name;
+ document.getElementById('join-name').value = '';
+buildCodeInputs(); // 코드 입력칸 초기화
+  
   loadChannel();
 }
 
