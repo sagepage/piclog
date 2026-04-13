@@ -206,8 +206,19 @@ input::placeholder{color:var(--text3)}
   <button class="lightbox-close" id="lightbox-close">
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
   </button>
-  <img id="lightbox-img" src="" alt="">
-  <div class="lightbox-info" id="lightbox-info"></div>
+  <div style="position:relative;width:100%;display:flex;align-items:center;justify-content:center">
+    <button id="lb-prev" style="position:absolute;left:12px;width:40px;height:40px;background:rgba(255,255,255,.15);border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <img id="lightbox-img" src="" alt="" style="transition:opacity .2s">
+    <button id="lb-next" style="position:absolute;right:12px;width:40px;height:40px;background:rgba(255,255,255,.15);border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:14px">
+    <div class="lightbox-info" id="lightbox-info"></div>
+    <div id="lb-counter" style="color:#fff;font-size:11px;opacity:.4;font-family:monospace"></div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -237,7 +248,7 @@ let selectedFile = null;
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
+  setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 0);
 }
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
@@ -378,6 +389,7 @@ async function deleteAlbum(id) {
 // ── 피드 ─────────────────────────────────
 async function loadFeed() {
   const feed = document.getElementById('feed');
+  lbPhotos = [];
   feed.innerHTML = '<div class="loading-center"><span class="spinner"></span></div>';
   let query = sb.from('photos').select('*, comments(count), likes(count)').eq('channel_id', state.channelId).order('created_at', { ascending: false });
   if (state.currentAlbum) query = query.eq('album_id', state.currentAlbum);
@@ -403,7 +415,7 @@ async function loadFeed() {
     const img = document.createElement('img');
     img.src = p.image_url; img.loading = 'lazy'; img.alt = '';
     thumb.appendChild(img);
-    thumb.addEventListener('click', () => openLightbox(p.image_url, p.uploader_name, p.created_at));
+    const photoIndex = lbPhotos.length; lbPhotos.push(p); thumb.addEventListener('click', () => openLightbox(p.image_url, p.uploader_name, p.created_at, photoIndex));
 
     const info = document.createElement('div');
     info.className = 'feed-info';
@@ -535,13 +547,29 @@ async function uploadPhoto() {
 }
 
 
-// ── 라이트박스 ──────────────────────────
-function openLightbox(url, name, time) {
-  document.getElementById('lightbox-img').src = url;
-  document.getElementById('lightbox-info').textContent = name + ' · ' + formatTime(time);
+// ── 라이트박스 (스와이프 지원) ─────────────
+let lbPhotos = [], lbIndex = 0;
+
+function openLightbox(url, name, time, index) {
+  lbIndex = index;
+  showLightboxSlide();
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+function showLightboxSlide() {
+  const p = lbPhotos[lbIndex];
+  if (!p) return;
+  const img = document.getElementById('lightbox-img');
+  img.style.opacity = '0';
+  img.src = p.image_url;
+  img.onload = () => { img.style.opacity = '1'; };
+  document.getElementById('lightbox-info').textContent = p.uploader_name + ' · ' + formatTime(p.created_at);
+  document.getElementById('lb-counter').textContent = (lbIndex+1) + ' / ' + lbPhotos.length;
+  document.getElementById('lb-prev').style.opacity = lbIndex > 0 ? '1' : '0.2';
+  document.getElementById('lb-next').style.opacity = lbIndex < lbPhotos.length-1 ? '1' : '0.2';
+}
+function lbPrev() { if (lbIndex > 0) { lbIndex--; showLightboxSlide(); } }
+function lbNext() { if (lbIndex < lbPhotos.length-1) { lbIndex++; showLightboxSlide(); } }
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
   document.getElementById('lightbox-img').src = '';
@@ -556,6 +584,24 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('btn-join').addEventListener('click', joinChannel);
   document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
   document.getElementById('lightbox').addEventListener('click', e => { if (e.target === document.getElementById('lightbox')) closeLightbox(); });
+  document.getElementById('lb-prev').addEventListener('click', e => { e.stopPropagation(); lbPrev(); });
+  document.getElementById('lb-next').addEventListener('click', e => { e.stopPropagation(); lbNext(); });
+
+  // 키보드 좌우 화살표
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'ArrowLeft') lbPrev();
+    else if (e.key === 'ArrowRight') lbNext();
+    else if (e.key === 'Escape') closeLightbox();
+  });
+
+  // 터치 스와이프
+  let tsX = 0;
+  document.getElementById('lightbox').addEventListener('touchstart', e => { tsX = e.touches[0].clientX; }, { passive: true });
+  document.getElementById('lightbox').addEventListener('touchend', e => {
+    const diff = tsX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) { if (diff > 0) lbNext(); else lbPrev(); }
+  });
   document.getElementById('btn-open-create').addEventListener('click', () => openModal('modal-create'));
 
   // 채널
