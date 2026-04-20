@@ -361,7 +361,7 @@ html,body{height:100%;overflow:hidden}
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ════════════════════════════════
@@ -378,7 +378,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const S = {
   channelId:null, channelName:null, userName:null,
   albums:[], currentAlbum:null,
-  view: localStorage.getItem('pk_view') || 'grid',
+  view: 'grid',
   photos:[], likedSet:new Set(),
   selectedIds:new Set(),
   userKey: localStorage.getItem('pk_uk') || crypto.randomUUID(),
@@ -436,7 +436,7 @@ function openQRModal() {
     toast('초대 링크 복사됨!');
   };
   document.getElementById('btn-qr-save').onclick = () => {
-    const canvas = document.getElementById('qr-only-canvas');
+    const canvas = wrap.querySelector('canvas');
     if (!canvas) return;
     const a = document.createElement('a');
     a.download = 'piclog-invite-' + S.channelId + '.png';
@@ -445,15 +445,24 @@ function openQRModal() {
     toast('저장됐어요!');
   };
 
-  // QR 생성
+  // QR 생성 — qrcodejs는 table 또는 canvas+img 생성, img 숨김 처리
   const wrap = document.getElementById('qr-canvas-wrap');
-  wrap.innerHTML = '<canvas id="qr-only-canvas" style="border-radius:16px;border:1px solid var(--border)"></canvas>';
-  const canvas = document.getElementById('qr-only-canvas');
-  QRCode.toCanvas(canvas, link, {
+  wrap.innerHTML = '';
+  new QRCode(wrap, {
+    text: link,
     width: 220,
-    margin: 2,
-    color: { dark: '#0a0a0a', light: '#ffffff' },
+    height: 220,
+    colorDark: '#0a0a0a',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M,
   });
+  // img 태그 숨기고 canvas만 표시
+  setTimeout(() => {
+    Array.from(wrap.children).forEach(el => {
+      if (el.tagName === 'IMG') el.style.display = 'none';
+      if (el.tagName === 'CANVAS') el.style.cssText = 'border-radius:16px;border:1px solid var(--border);display:block';
+    });
+  }, 100);
 
   openModal('modal-qr');
 }
@@ -549,7 +558,6 @@ function enterChannel() {
 // ── 뷰 전환 ───────────────────────────────────
 function setViewUI(v) {
   S.view = v;
-  localStorage.setItem('pk_view', v);
   document.getElementById('vt-grid').classList.toggle('on', v==='grid');
   document.getElementById('vt-list').classList.toggle('on', v==='list');
 }
