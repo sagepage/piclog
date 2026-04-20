@@ -361,7 +361,7 @@ html,body{height:100%;overflow:hidden}
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ════════════════════════════════
@@ -436,7 +436,7 @@ function openQRModal() {
     toast('초대 링크 복사됨!');
   };
   document.getElementById('btn-qr-save').onclick = () => {
-    const canvas = document.querySelector('#qr-canvas-wrap canvas');
+    const canvas = document.getElementById('qr-only-canvas');
     if (!canvas) return;
     const a = document.createElement('a');
     a.download = 'piclog-invite-' + S.channelId + '.png';
@@ -445,24 +445,15 @@ function openQRModal() {
     toast('저장됐어요!');
   };
 
-  // QR 생성 — canvas만 남기고 img 태그 제거
+  // QR 생성
   const wrap = document.getElementById('qr-canvas-wrap');
-  wrap.innerHTML = '';
-  const qrObj = new QRCode(wrap, {
-    text: link,
+  wrap.innerHTML = '<canvas id="qr-only-canvas" style="border-radius:16px;border:1px solid var(--border)"></canvas>';
+  const canvas = document.getElementById('qr-only-canvas');
+  QRCode.toCanvas(canvas, link, {
     width: 220,
-    height: 220,
-    colorDark: '#0a0a0a',
-    colorLight: '#ffffff',
-    correctLevel: QRCode.CorrectLevel.M,
+    margin: 2,
+    color: { dark: '#0a0a0a', light: '#ffffff' },
   });
-  // qrcodejs는 canvas + img 둘 다 생성 → img 제거
-  setTimeout(() => {
-    const img = wrap.querySelector('img');
-    if (img) img.remove();
-    const canvas = wrap.querySelector('canvas');
-    if (canvas) canvas.style.cssText = 'border-radius:16px;border:1px solid var(--border);display:block';
-  }, 50);
 
   openModal('modal-qr');
 }
