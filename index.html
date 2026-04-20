@@ -445,10 +445,10 @@ function openQRModal() {
     toast('저장됐어요!');
   };
 
-  // QR 생성 (기존 QR 초기화)
+  // QR 생성 — canvas만 남기고 img 태그 제거
   const wrap = document.getElementById('qr-canvas-wrap');
   wrap.innerHTML = '';
-  new QRCode(wrap, {
+  const qrObj = new QRCode(wrap, {
     text: link,
     width: 220,
     height: 220,
@@ -456,10 +456,12 @@ function openQRModal() {
     colorLight: '#ffffff',
     correctLevel: QRCode.CorrectLevel.M,
   });
-  // 둥근 모서리 적용
+  // qrcodejs는 canvas + img 둘 다 생성 → img 제거
   setTimeout(() => {
+    const img = wrap.querySelector('img');
+    if (img) img.remove();
     const canvas = wrap.querySelector('canvas');
-    if (canvas) canvas.style.cssText = 'border-radius:16px;border:1px solid var(--border)';
+    if (canvas) canvas.style.cssText = 'border-radius:16px;border:1px solid var(--border);display:block';
   }, 50);
 
   openModal('modal-qr');
